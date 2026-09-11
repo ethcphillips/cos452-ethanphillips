@@ -38,6 +38,19 @@
         outColor = vec4(0.0, 1.0, 1.0, 1.0);     // TODO(student): recolor me
       }`;
 
+      const vertexSource1 = `#version 300 es
+      void main() {
+        gl_Position = vec4(-0.95, -0.75, 0.0, 1.0); // TODO(student): move me
+        gl_PointSize = 25.0;                     // TODO(student): resize me
+      }`;
+
+      const fragmentSource1 = `#version 300 es
+      precision mediump float;
+      out vec4 outColor;
+      void main() {
+        outColor = vec4(1.0, 1.0, 0.0, 1.0);     // TODO(student): recolor me
+      }`;
+
       function createShader(gl, type, source) {
         const shader = gl.createShader(type);
         gl.shaderSource(shader, source);
@@ -67,6 +80,7 @@
       }
 
       const program = createProgram(gl, vertexSource, fragmentSource);
+      const program1 = createProgram(gl, vertexSource1, fragmentSource1);
 
       function render() {
         const dpr = window.devicePixelRatio || 1;
@@ -78,10 +92,16 @@
         }
         gl.viewport(0, 0, canvas.width, canvas.height);
 
-        gl.useProgram(program);
         gl.clearColor(0.1, 0.12, 0.16, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
+
+        gl.useProgram(program);
         gl.drawArrays(gl.POINTS, 0, 1);
+
+        gl.useProgram(program1);
+        gl.drawArrays(gl.POINTS, 0, 1);
+
+
       }
 
       window.addEventListener("resize", render);
