@@ -121,17 +121,16 @@
       // TODO(student): replace identity with T, R, S, and their product.
       const T = translation(-0.2, 0.2, 0.0);
       const R = rotationZ(Math.PI/6);
-      const S = scaling(0.5, 0.5, 1.0);
+      const S = identity();
 
-      // const model = multiply(T, multiply(R, S))
-      const model = multiply(R, multiply(T, S))
+      const model = multiply(T, multiply(R, S))
+      // const model = multiply(R, multiply(T, S))
 
-      // The first transformation performs the scaling first, shrinking the entire square by .5. Then the square is rotated 30 degrees. 
-      // FInally the square is moved to the left by .2 and up by .2. The final graphic is a tilted square about half the size of the original, 
-      // located slightly in the 2nd quadrant.
-      // The second transformation has the same scale but the square is slightly further left and lower than the first transformation.
-      // For this transformation the sacling still happened first, followed by moving the square to the left and up by .2. Then the rotation was
-      // applied to the new position with respect to the origin. 
+      /*
+      (T*R*S) rotates the square 30 degrees, then the square is translated to the left by .2 and up by .2. 
+      (R*T*S) first translates the square to the left by .2 and up by .2. Then the rotation is applied to the new position with respect to the origin. 
+      The (R*T*S) transformation ends up slightly further left and lower than the first transformation.
+      */
 
       gl.uniformMatrix4fv(uMatrix, false, model);
 
