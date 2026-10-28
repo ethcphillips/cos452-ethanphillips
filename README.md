@@ -16,4 +16,6 @@
 
 [Week 8](https://ethcphillips.github.io/cos452-ethanphillips/week08/)
 
+[Week 9](https://ethcphillips.github.io/cos452-ethanphillips/week09/)
+
 [Capstone](https://ethcphillips.github.io/cos452-ethanphillips/capstone/)

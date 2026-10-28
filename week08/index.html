@@ -104,8 +104,8 @@
     const uMVP = gl.getUniformLocation(program, "u_mvp");
 
     gl.enable(gl.DEPTH_TEST);
-    // When depth testing is disabled, faces of the cube that are drawn later overwrite nearer faces despite them being further from the camera. 
-    // So as the cube rotates, faces that should be obscured by the front faces are sometimes visible. 
+    // When depth testing is disabled, faces of the cube that are drawn later overwrite nearer faces even when they are farther from the camera. 
+    // So as the cube rotates, faces that should be obscured by the front faces are sometimes visible because the draw order is determining what face is visible instead of the depth value. 
     // The overall effect is that the image doesn't look consistently 3D, or almost like it goes inside out.
 
     function frame(t) {
@@ -117,8 +117,8 @@
 
       const a = t * 0.0008;
       const aspect = canvas.width / canvas.height;
-      // Changing the perspective from 50 degrees to 75 degrees makes the cube appear smaller, as the camera has zoomed out. 
-      // The larger FOV shows a wider area of the scene, so the cube is the same size, it's just filling less of the screen after the change.
+      // Changing the perspective from 50 degrees to 100 degrees makes the cube appear smaller, due to a wider FOV. 
+      // The wider FOV shows a wider area of the scene, so the cube has the same geometry, it's just filling less of the screen after the change.
 
       const P = perspective(100 * Math.PI / 180, aspect, 0.1, 100);
       const V = translation(0, 0, -3);
