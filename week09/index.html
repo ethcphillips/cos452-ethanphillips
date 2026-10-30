@@ -76,13 +76,13 @@
     const image = new Image();
     image.onload = () => {
       gl.bindTexture(gl.TEXTURE_2D, texture);
+
      // When the line is commented out, the image is flipped upside own. This is because by convention, WebGL2 considers the bottom left corner to be the origin (0,0) for the texture coordinates. 
      // Most image files start at the top left. Therefore by default, the image flips when mapped to the texture. 
      // The other fix for this is to flip the V texture coordinates using v = 1 - v.  
+
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-      // TODO(student) (c): try REPEAT vs CLAMP_TO_EDGE (both lines), then NEAREST vs
-      // LINEAR for MAG_FILTER. Describe each visual difference in a comment.
 
       // While both lines are set to CLAMP_TO_EDGE, the orginal image is situated in the bottom left
       // corner of the quad, and the pixels on the side and top are "smeared" horizontally and vertically, respectively.
@@ -92,6 +92,7 @@
       // You can see individual pixels clearly and curved lines became jagged and pixelalted. 
       // Linear makes everything more blurry, but reduces the heavy pixellation effect. 
       // Regardless, the original image is somewhat pixellated to begin with, and it's not dramatically smoother.
+
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
