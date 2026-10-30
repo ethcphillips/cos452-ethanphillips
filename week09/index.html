@@ -56,11 +56,9 @@
     const program = createProgram(gl, vertexSource, fragmentSource);
 
     // interleaved: x, y, u, v
-    // TODO(student) (c): change every 1 in the UVs (the u, v columns) to 2 so the
-    // UVs run past 1.0; otherwise REPEAT and CLAMP_TO_EDGE look the same.
     const data = new Float32Array([
-      -0.7,-0.7, 0,0,   0.7,-0.7, 1,0,   0.7,0.7, 1,1,
-      -0.7,-0.7, 0,0,   0.7, 0.7, 1,1,  -0.7,0.7, 0,1,
+      -0.7,-0.7, 0,0,   0.7,-0.7, 2,0,   0.7,0.7, 2,2,
+      -0.7,-0.7, 0,0,   0.7, 0.7, 2,2,  -0.7,0.7, 0,2,
     ]);
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -78,22 +76,30 @@
     const image = new Image();
     image.onload = () => {
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      // TODO(student) (b): comment out the next line and reload. In a comment,
-      // explain why the image is upside down without it, and name the other fix
-      // (flip V in the UVs: v becomes 1 - v). Then turn it back on.
+     // When the line is commented out, the image is flipped upside own. This is because by convention, WebGL2 considers the bottom left corner to be the origin (0,0) for the texture coordinates. 
+     // Most image files start at the top left. Therefore by default, the image flips when mapped to the texture. 
+     // The other fix for this is to flip the V texture coordinates using v = 1 - v.  
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       // TODO(student) (c): try REPEAT vs CLAMP_TO_EDGE (both lines), then NEAREST vs
       // LINEAR for MAG_FILTER. Describe each visual difference in a comment.
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+      // While both lines are set to CLAMP_TO_EDGE, the orginal image is situated in the bottom left
+      // corner of the quad, and the pixels on the side and top are "smeared" horizontally and vertically, respectively.
+      // The top right quadrant of the quad is black.
+      // With REPEAT, the original image appears tiled into all 4 quadrants of the original quad.
+      // With filtering set to NEAREST, the image is much more pixellated and sharp than with LINEAR.
+      // You can see individual pixels clearly and curved lines became jagged and pixelalted. 
+      // Linear makes everything more blurry, but reduces the heavy pixellation effect. 
+      // Regardless, the original image is somewhat pixellated to begin with, and it's not dramatically smoother.
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
       render();
     };
-    // TODO(student) (a): put your own image (PNG or JPG) next to index.html and
-    // set its file name here.
-    image.src = "my-image.png"; // must be served over http (Live Server)
+
+    image.src = "cat.jpg"; // must be served over http (Live Server)
 
     function render() {
       const dpr = window.devicePixelRatio || 1;
@@ -114,8 +120,6 @@
 
     render(); // draws before the image loads; render() runs again on image.onload
 
-    // TODO(student) (d): commit the image with index.html, open your Pages URL,
-    // and check the console (F12). File names are case-sensitive on Pages.
   </script>
 </body>
 </html>
